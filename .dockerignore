@@ -1,0 +1,11 @@
+.obj/
+*.o
+*.a
+bench/client
+bench/replica
+sequencer/sequencer
+.git/
+*.md
+!DOCKER_SETUP.md
+!README.md
+
