@@ -16,8 +16,13 @@ CFLAGS += $(LIBPATH)
 # CHECK_CFLAGS := $(shell pkg-config --cflags check)
 # CHECK_LDFLAGS := $(shell pkg-config --cflags --libs check)
 # Debian package: libprotobuf-dev
-PROTOBUF_CFLAGS := $(shell pkg-config --cflags protobuf)
-PROTOBUF_LDFLAGS := $(shell pkg-config --cflags --libs protobuf)
+# Some environments ship libprotobuf without a protobuf.pc file.
+# Fall back to direct linking so protobuf-generated code still links.
+PROTOBUF_CFLAGS := $(shell pkg-config --cflags protobuf 2>/dev/null)
+PROTOBUF_LDFLAGS := $(shell pkg-config --libs protobuf 2>/dev/null)
+ifeq ($(strip $(PROTOBUF_LDFLAGS)),)
+PROTOBUF_LDFLAGS := -lprotobuf
+endif
 CFLAGS += $(PROTOBUF_CFLAGS)
 LDFLAGS += $(PROTOBUF_LDFLAGS)
 PROTOC := protoc
